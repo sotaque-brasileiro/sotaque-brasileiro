@@ -4,3 +4,4 @@ from .io import *
 from . import utils
 from .utils import *
 from . import preprocessing
+from . import visualization

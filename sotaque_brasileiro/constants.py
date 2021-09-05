@@ -8,6 +8,7 @@ class constants(Enum):
     """
     Enum with all constants used in the project.
     """
+
     # General
     API_BASE_URL = "https://api-sotaque.gabriel-milan.com/"
     API_RECORDS_ENDPOINT = API_BASE_URL + "records/"
@@ -25,6 +26,9 @@ class constants(Enum):
         "MINIO_SECRET_KEY",
         "MINIO_BUCKET",
     ]
+
+    # Visualization
+    BRAZIL_CENTER_DEFAULT = dict(lat=-15.822, lon=-47.611)
 
     # MinIO env names
     MINIO_ENDPOINT = "MINIO_ENDPOINT"

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="sotaque_brasileiro",
-    version="0.1.4",
+    version="0.1.5",
     license="GPL-3.0",
     description="Sotaque Brasileiro é uma base de dados para estudo de regionalismos brasileiros através da voz.",
     long_description=long_description,
@@ -18,6 +18,7 @@ setup(
         "scipy",
         "pandas",
         "numpy",
+        "plotly",
         "minio==7.1.0",
         "requests==2.21.0",
         "SpeechRecognition==3.8.1",

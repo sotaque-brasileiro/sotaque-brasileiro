@@ -1,6 +1,7 @@
 scipy
 pandas
 numpy
+plotly
 minio==7.1.0
 requests==2.21.0
 pydub==0.25.1
