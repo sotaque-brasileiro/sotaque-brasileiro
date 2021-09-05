@@ -30,6 +30,12 @@ jobs:
         run: |
           pip install -e .
 
+      - name: Setup ffmpeg
+        uses: FedericoCarboni/setup-ffmpeg@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+        id: setup-ffmpeg
+
       - name: Build dataset release
         run: |
           python3 scripts/gh-actions-release-data.py
