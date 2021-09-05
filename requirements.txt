@@ -5,3 +5,4 @@ minio==7.1.0
 requests==2.21.0
 pydub==0.25.1
 webrtcvad==2.0.10
+SpeechRecognition==3.8.1
