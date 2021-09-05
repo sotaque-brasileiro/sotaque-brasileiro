@@ -1,3 +1,7 @@
-requests==2.21.0
-minio==7.1.0
+scipy
 pandas
+numpy
+minio==7.1.0
+requests==2.21.0
+pydub==0.25.1
+webrtcvad==2.0.10

@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="sotaque_brasileiro",
-    version="0.1.2",
+    version="0.1.3",
     license="GPL-3.0",
     description="Sotaque Brasileiro é uma base de dados para estudo de regionalismos brasileiros através da voz.",
     long_description=long_description,
@@ -15,9 +15,13 @@ setup(
     author_email="gabriel.gazola@poli.ufrj.br",
     url="https://github.com/gabriel-milan/sotaque-brasileiro",
     install_requires=[
-        "requests==2.21.0",
-        "minio==7.1.0",
+        "scipy",
         "pandas",
+        "numpy",
+        "minio==7.1.0",
+        "requests==2.21.0",
+        "pydub==0.25.1",
+        "webrtcvad==2.0.10",
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
