@@ -35,8 +35,11 @@ jobs:
           python3 scripts/gh-actions-release-data.py
 
       - name: Upload dataset release
-        uses: actions/upload-artifact@v2
+        uses: "marvinpinto/action-automatic-releases@latest"
         with:
-          name: sotaque-brasileiro
-          path: |
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "latest"
+          prerelease: false
+          title: "Sotaque Brasileiro"
+          files: |
             sotaque-brasileiro-*.zip

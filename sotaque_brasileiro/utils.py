@@ -137,7 +137,7 @@ def get_updated_dataframe():
 
 def download_dataset(
     path_to_save: str = constants.DATASET_SAVE_DEFAULT_PATH.value,
-    show_progress=True
+    show_progress: bool = constants.SHOW_PROGRESS_DEFAULT.value,
 ):
     """
     Download an updated version of the dataset from the API and MinIO.
