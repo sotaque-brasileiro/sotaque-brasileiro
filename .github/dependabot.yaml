@@ -1,0 +1,12 @@
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: "backend/brazilian_regional_accent"
+    target-branch: "master"
+    schedule:
+      interval: "weekly"
+    open-pull-requests-limit: 10
+    reviewers:
+      - gabriel-milan
+    assignees:
+      - gabriel-milan

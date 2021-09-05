@@ -1,0 +1,27 @@
+name: Publish PyPI package
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build_and_publish:
+    name: Build and publish to PyPI
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8.x"
+          architecture: "x64"
+      - name: Install dependencies
+        run: pip install wheel && pip install --prefer-binary -r requirements.txt
+      - name: Build source distribution
+        run: python setup.py sdist
+      - name: Publish latest on PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_API_TOKEN }}

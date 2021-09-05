@@ -1,0 +1,42 @@
+name: Publish dataset release
+
+env:
+  MINIO_BUCKET: ${{ secrets.MINIO_BUCKET }}
+  MINIO_ENDPOINT: ${{ secrets.MINIO_ENDPOINT }}
+  MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
+  MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+
+on:
+  push:
+    branches:
+      - master
+  schedule:
+    - cron: "0 0 * * *"
+
+jobs:
+  publish_data_release:
+    name: Publish dataset release
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v2
+        with:
+          python-version: "3.8.x"
+          architecture: "x64"
+
+      - name: Install sotaque-brasileiro
+        run: |
+          pip install -e .
+
+      - name: Build dataset release
+        run: |
+          python3 scripts/gh-actions-release-data.py
+
+      - name: Upload dataset release
+        uses: actions/upload-artifact@v2
+        with:
+          name: sotaque-brasileiro
+          path: |
+            sotaque-brasileiro-*.zip
