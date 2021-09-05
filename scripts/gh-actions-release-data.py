@@ -18,7 +18,7 @@ def get_today_date():
     return datetime.date.today().strftime("%Y%m%d")
 
 
-sotaque_brasileiro.download_dataset()
+sotaque_brasileiro.download_dataset(show_progress=False)
 
 zipf = zipfile.ZipFile(
     f'sotaque-brasileiro-{get_today_date()}.zip', 'w', zipfile.ZIP_DEFLATED)
