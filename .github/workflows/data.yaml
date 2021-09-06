@@ -40,7 +40,21 @@ jobs:
         run: |
           python3 scripts/gh-actions-release-data.py
 
-      - name: Upload dataset release
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: Upload dataset release with daily tag
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: ${{ steps.date.outputs.date }}
+          prerelease: false
+          title: "Sotaque Brasileiro"
+          files: |
+            sotaque-brasileiro-*.zip
+
+      - name: Upload dataset release with latest tag
         uses: "marvinpinto/action-automatic-releases@latest"
         with:
           repo_token: "${{ secrets.GITHUB_TOKEN }}"
