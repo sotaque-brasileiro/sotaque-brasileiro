@@ -1,10 +1,15 @@
+"""
+Visualization module for the Sotaque Brasileiro project.
+"""
+import numpy as np
 import pandas as pd
+import scipy.fftpack
 import plotly.express as px
 
 from sotaque_brasileiro.constants import constants
 
 
-def plot_geo_heatmap(df: pd.DataFrame, columns_set: str):
+def plot_geo_heatmap(df: pd.DataFrame, columns_set: str):  # pylint: disable=invalid-name
     """
     Plot a heatmap of a given set of columns in a dataframe.
     """
@@ -36,7 +41,7 @@ def plot_geo_heatmap(df: pd.DataFrame, columns_set: str):
     fig.show()
 
 
-def plot_engagement_over_time(df: pd.DataFrame):
+def plot_engagement_over_time(df: pd.DataFrame):  # pylint: disable=invalid-name
     """
     Plot line charts containing number of audios over time.
     """
@@ -44,5 +49,22 @@ def plot_engagement_over_time(df: pd.DataFrame):
     df["cumulative"] = df["id"].cumsum()
     fig = px.line(
         df, x="date", y="cumulative", title="Crescimento da Sotaque Brasileiro"
+    )
+    fig.show()
+
+
+def plot_fft(frame: np.ndarray, sample_rate: int):
+    """
+    Plot a fft of a given frame.
+    """
+    frame_len = len(frame)
+    y_f = scipy.fftpack.fft(frame)
+    x_f = np.linspace(0.0, (0.5*sample_rate), int(frame_len / 2))
+    fig = px.line(
+        x=x_f,
+        y=2.0/frame_len * np.abs(y_f[:frame_len//2]),
+        # xaxis_label="Frequência",
+        # yaxis_label="Magnitude",
+        title="Transformada de Fourier",
     )
     fig.show()

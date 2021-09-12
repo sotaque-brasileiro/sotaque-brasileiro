@@ -1,3 +1,7 @@
+"""
+Sotaque Brasileiro - Python package for interacting with the dataset.
+"""
+
 from .constants import constants
 from . import io
 from .io import *

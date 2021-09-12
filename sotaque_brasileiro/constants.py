@@ -1,10 +1,14 @@
+"""
+Constants for the Sotaque Brasileiro project.
+"""
+
 from enum import Enum
 from pathlib import Path
 
 __all__ = ["constants"]
 
 
-class constants(Enum):
+class constants(Enum):  # pylint: disable=invalid-name
     """
     Enum with all constants used in the project.
     """
@@ -26,6 +30,9 @@ class constants(Enum):
         "MINIO_SECRET_KEY",
         "MINIO_BUCKET",
     ]
+
+    # Preprocessing
+    PREEMPHASIS_COEFFICIENT = 0.95
 
     # Visualization
     BRAZIL_CENTER_DEFAULT = dict(lat=-15.822, lon=-47.611)

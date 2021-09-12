@@ -1,3 +1,6 @@
+"""
+General purpose utilities functions.
+"""
 from os import environ
 from pathlib import Path
 from typing import Dict, List
@@ -10,45 +13,11 @@ except ImportError:
     tqdm = None
 
 from sotaque_brasileiro.constants import constants
-from sotaque_brasileiro.io import (
-    fetch_paginated_data,
-    download_multiple,
-    load_envs_from_file,
-)
-from sotaque_brasileiro.preprocessing import webm_to_wav
 
 __all__ = [
     "get_updated_dataframe",
     "download_dataset",
 ]
-
-
-def safe_getenv(key: str) -> str:
-    """
-    Get an environment variable safely,
-    tries to load it from file if not found.
-
-    Args:
-        key: The key of the environment variable.
-
-    Returns:
-        The value of the environment variable, if exists.
-
-    Raises:
-        KeyError: If the key does not exist.
-    """
-    try:
-        return environ[key]
-    except KeyError:
-        env_file = Path(constants.ENV_FILE_DEFAULT_PATH.value)
-        if env_file.exists() and env_file.is_file():
-            try:
-                load_envs_from_file()
-                return environ[key]
-            except KeyError:
-                raise KeyError(
-                    f"{key} is not set and the default env file was not found."
-                )
 
 
 def parse_records_to_dataframe(
@@ -64,7 +33,7 @@ def parse_records_to_dataframe(
         A pandas dataframe.
     """
     # Get initial dataframe
-    df = pd.DataFrame(records)
+    df = pd.DataFrame(records)  # pylint: disable=invalid-name
 
     # Extract id from url
     df["id"] = df["url"].apply(lambda x: int(x.split("/")[-2]))
@@ -82,9 +51,12 @@ def parse_records_to_dataframe(
     df["birth_state"] = df["speaker"].apply(
         lambda x: x["birth_city"]["state"]["abbreviation"]
     )
-    df["birth_latitude"] = df["speaker"].apply(lambda x: x["birth_city"]["latitude"])
-    df["birth_longitude"] = df["speaker"].apply(lambda x: x["birth_city"]["longitude"])
-    df["current_city"] = df["speaker"].apply(lambda x: x["current_city"]["name"])
+    df["birth_latitude"] = df["speaker"].apply(
+        lambda x: x["birth_city"]["latitude"])
+    df["birth_longitude"] = df["speaker"].apply(
+        lambda x: x["birth_city"]["longitude"])
+    df["current_city"] = df["speaker"].apply(
+        lambda x: x["current_city"]["name"])
     df["current_state"] = df["speaker"].apply(
         lambda x: x["current_city"]["state"]["abbreviation"]
     )
@@ -116,6 +88,7 @@ def parse_records_to_dataframe(
     df["date"] = df["date"].dt.tz_convert(timezone)
 
     # Order columns
+    #pylint: disable=invalid-name
     df = df[
         [
             "id",
@@ -148,8 +121,10 @@ def get_updated_dataframe():
     """
     Get the dataframe with the latest data from the API.
     """
+    # pylint: disable=import-outside-toplevel
+    from sotaque_brasileiro.io import fetch_paginated_data
     records = fetch_paginated_data(constants.API_RECORDS_ENDPOINT.value)
-    df = parse_records_to_dataframe(records)
+    df = parse_records_to_dataframe(records)  # pylint: disable=invalid-name
     return df
 
 
@@ -160,13 +135,16 @@ def download_dataset(
     """
     Download an updated version of the dataset from the API and MinIO.
     """
+    # pylint: disable=import-outside-toplevel
+    from sotaque_brasileiro.io import download_multiple, webm_to_wav
     print("Fetching updated dataframe...")
-    df = get_updated_dataframe()
+    df = get_updated_dataframe()  # pylint: disable=invalid-name
     save_dir = Path(path_to_save)
     save_dir.mkdir(parents=True, exist_ok=True)
     df.to_csv(str(save_dir / "sotaque-brasileiro.csv"), index=False)
     blob_list = list(df["audio_file_path"])
-    df["audio_file_path"] = df["audio_file_path"].apply(lambda x: str(save_dir / x))
+    df["audio_file_path"] = df["audio_file_path"].apply(
+        lambda x: str(save_dir / x))
     file_list = list(df["audio_file_path"])
     if not show_progress:
         print("Downloading audio files...")
@@ -179,7 +157,8 @@ def download_dataset(
     if show_progress:
         if tqdm is None:
             raise ImportError(
-                "tqdm must be installed to show progress. Either install tqdm or run this command with show_progress=False"
+                """tqdm must be installed to show progress.
+                Either install tqdm or run this command with show_progress=False"""
             )
         for file in tqdm(file_list, desc="Converting audio files..."):
             webm_to_wav(file)
