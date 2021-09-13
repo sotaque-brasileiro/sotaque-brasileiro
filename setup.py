@@ -24,6 +24,8 @@ setup(
         "SpeechRecognition==3.8.1",
         "pydub==0.25.1",
         "webrtcvad==2.0.10",
+        "librosa==0.8.1",
+        "python_speech_features==0.6",
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
