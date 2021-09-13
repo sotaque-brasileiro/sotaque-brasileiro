@@ -13,6 +13,7 @@ except ImportError:
     tqdm = None
 
 from sotaque_brasileiro.constants import constants
+from sotaque_brasileiro.io import safe_getenv
 
 __all__ = [
     "get_updated_dataframe",
