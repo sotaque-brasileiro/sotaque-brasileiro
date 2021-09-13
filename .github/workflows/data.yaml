@@ -36,6 +36,10 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
         id: setup-ffmpeg
 
+      - name: Setup libsndfile
+        run: |
+        sudo apt-get install libsndfile1-dev
+
       - name: Build dataset release
         run: |
           python3 scripts/gh-actions-release-data.py
