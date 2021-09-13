@@ -38,7 +38,7 @@ jobs:
 
       - name: Setup libsndfile
         run: |
-        sudo apt-get install libsndfile1-dev
+          sudo apt-get install libsndfile1-dev
 
       - name: Build dataset release
         run: |
