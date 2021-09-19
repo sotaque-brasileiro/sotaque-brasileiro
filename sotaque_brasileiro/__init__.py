@@ -9,3 +9,4 @@ from . import utils
 from .utils import *
 from . import preprocessing
 from . import visualization
+from . import feature
