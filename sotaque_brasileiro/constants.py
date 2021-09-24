@@ -25,10 +25,8 @@ class constants(Enum):  # pylint: disable=invalid-name
     # Environment
     ENV_FILE_DEFAULT_PATH = Path.home() / ".sotaque_brasileiro.env"
     ENV_FILE_ALLOWED_KEYS = [
-        "MINIO_ENDPOINT",
-        "MINIO_ACCESS_KEY",
-        "MINIO_SECRET_KEY",
-        "MINIO_BUCKET",
+        "GCS_BUCKET_NAME",
+        "GOOGLE_CLOUD_CREDENTIALS",
     ]
 
     # Preprocessing
@@ -37,8 +35,6 @@ class constants(Enum):  # pylint: disable=invalid-name
     # Visualization
     BRAZIL_CENTER_DEFAULT = dict(lat=-15.822, lon=-47.611)
 
-    # MinIO env names
-    MINIO_ENDPOINT = "MINIO_ENDPOINT"
-    MINIO_ACCESS_KEY = "MINIO_ACCESS_KEY"
-    MINIO_SECRET_KEY = "MINIO_SECRET_KEY"
-    MINIO_BUCKET = "MINIO_BUCKET"
+    # Google Cloud env names
+    GCS_BUCKET_NAME = "GCS_BUCKET_NAME"
+    GOOGLE_CLOUD_CREDENTIALS = "GOOGLE_CLOUD_CREDENTIALS"

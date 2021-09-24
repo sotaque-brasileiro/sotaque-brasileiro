@@ -1,10 +1,8 @@
 name: Publish dataset release
 
 env:
-  MINIO_BUCKET: ${{ secrets.MINIO_BUCKET }}
-  MINIO_ENDPOINT: ${{ secrets.MINIO_ENDPOINT }}
-  MINIO_ACCESS_KEY: ${{ secrets.MINIO_ACCESS_KEY }}
-  MINIO_SECRET_KEY: ${{ secrets.MINIO_SECRET_KEY }}
+  GCS_BUCKET_NAME: ${{ secrets.GCS_BUCKET_NAME }}
+  GOOGLE_CLOUD_CREDENTIALS: ${{ secrets.GOOGLE_CLOUD_CREDENTIALS }}
 
 on:
   push:

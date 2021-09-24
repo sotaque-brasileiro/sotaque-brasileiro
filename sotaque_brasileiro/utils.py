@@ -134,7 +134,7 @@ def download_dataset(
     show_progress: bool = constants.SHOW_PROGRESS_DEFAULT.value,
 ):
     """
-    Download an updated version of the dataset from the API and MinIO.
+    Download an updated version of the dataset from the API and GCS.
     """
     # pylint: disable=import-outside-toplevel
     from sotaque_brasileiro.io import download_multiple, webm_to_wav
@@ -150,7 +150,7 @@ def download_dataset(
     if not show_progress:
         print("Downloading audio files...")
     download_multiple(
-        bucket_name=safe_getenv(constants.MINIO_BUCKET.value),
+        bucket_name=safe_getenv(constants.GCS_BUCKET_NAME.value),
         object_names=blob_list,
         file_paths=file_list,
         show_progress=show_progress,

@@ -1,19 +1,22 @@
 """
 IO utils for the Sotaque Brasileiro project.
 """
+import json
+import base64
 from typing import Iterable
 from os import environ
 from pathlib import Path
 
 import requests
 import numpy as np
-from minio import Minio
 from scipy.io import wavfile
 try:
     from tqdm import tqdm
 except ImportError:
     tqdm = None
 from pydub import AudioSegment
+from google.oauth2 import service_account
+from google.cloud import storage
 
 from sotaque_brasileiro.constants import constants
 
@@ -105,19 +108,32 @@ def save_envs_to_file(file_path=constants.ENV_FILE_DEFAULT_PATH.value):
                 file.write("{}={}\n".format(key, value))
 
 
+def get_credentials_from_env() -> service_account.Credentials:
+    """Gets credentials from env vars"""
+    env: str = safe_getenv(constants.GOOGLE_CLOUD_CREDENTIALS.value)
+    if env == "":
+        raise ValueError(
+            f"GOOGLE_CLOUD_CREDENTIALS env var not set!")
+    info: dict = json.loads(base64.b64decode(env))
+    return service_account.Credentials.from_service_account_info(info)
+
+
+def get_gcs_client() -> storage.Client:
+    """
+    Returns a Google Cloud Storage client.
+    """
+    credentials = get_credentials_from_env()
+    return storage.Client(credentials=credentials)
+
+
 def download_file(bucket_name: str, object_name: str, file_path: str):
     """
-    Download a file from a bucket.
+    Download a file from GCS.
     """
-    # pylint: disable=import-outside-toplevel
-    from sotaque_brasileiro.utils import safe_getenv
-
-    minio_client = Minio(
-        safe_getenv(constants.MINIO_ENDPOINT.value),
-        access_key=safe_getenv(constants.MINIO_ACCESS_KEY.value),
-        secret_key=safe_getenv(constants.MINIO_SECRET_KEY.value),
-    )
-    minio_client.fget_object(bucket_name, object_name, file_path)
+    client = get_gcs_client()
+    bucket = client.get_bucket(bucket_name)
+    blob = bucket.get_blob(object_name)
+    blob.download_to_filename(file_path)
 
 
 def download_multiple(
@@ -129,16 +145,8 @@ def download_multiple(
     """
     Download multiple files from a bucket.
     """
-    # pylint: disable=import-outside-toplevel
-    from sotaque_brasileiro.utils import safe_getenv
-
     object_names = list(object_names)
     file_paths = list(file_paths)
-    minio_client = Minio(
-        safe_getenv(constants.MINIO_ENDPOINT.value),
-        access_key=safe_getenv(constants.MINIO_ACCESS_KEY.value),
-        secret_key=safe_getenv(constants.MINIO_SECRET_KEY.value),
-    )
     if show_progress:
         if tqdm is None:
             raise ImportError(
@@ -150,11 +158,11 @@ def download_multiple(
             desc="Downloading audio files...",
             total=len(object_names),
         ):
-            minio_client.fget_object(bucket_name, object_name, file_path)
+            download_file(bucket_name, object_name, file_path)
             tqdm.write(object_name)
     else:
         for object_name, file_path in zip(object_names, file_paths):
-            minio_client.fget_object(bucket_name, object_name, file_path)
+            download_file(bucket_name, object_name, file_path)
 
 
 def webm_to_wav(webm_file: str):

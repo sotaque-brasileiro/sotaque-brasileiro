@@ -2,7 +2,7 @@ scipy
 pandas
 numpy
 plotly
-minio==7.1.0
+google-cloud-storage==1.42.1
 requests==2.21.0
 pydub==0.25.1
 webrtcvad==2.0.10
