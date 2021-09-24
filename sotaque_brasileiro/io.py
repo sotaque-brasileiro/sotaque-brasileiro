@@ -130,6 +130,9 @@ def download_file(bucket_name: str, object_name: str, file_path: str):
     """
     Download a file from GCS.
     """
+    parent_dir = Path(file_path).parent
+    if not parent_dir.exists():
+        parent_dir.mkdir(parents=True, exist_ok=True)
     client = get_gcs_client()
     bucket = client.get_bucket(bucket_name)
     blob = bucket.get_blob(object_name)
