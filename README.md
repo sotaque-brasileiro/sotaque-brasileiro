@@ -27,5 +27,5 @@ Além disso, aqui serão disponibilizadas releases diárias de novas versões da
 
 ## Repositórios relacionados
 
-- Web app para coleta de áudios: [gabriel-milan/brazilian-regional-accent](https://github.com/gabriel-milan/brazilian-regional-accent)
+- Web app para coleta de áudios: [sotaque-brasileiro/sotaque-brasileiro.github.io](https://github.com/sotaque-brasileiro/sotaque-brasileiro.github.io)
 - Desenvolvimento da identificação de sotaques: [gabriel-milan/brazilian-regional-accent-detection](https://github.com/gabriel-milan/brazilian-regional-accent-detection)
