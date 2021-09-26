@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="sotaque_brasileiro",
-    version="0.1.7",
+    version="0.1.8",
     license="GPL-3.0",
     description="Sotaque Brasileiro é uma base de dados para estudo de regionalismos brasileiros através da voz.",
     long_description=long_description,

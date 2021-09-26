@@ -21,6 +21,7 @@ class constants(Enum):  # pylint: disable=invalid-name
     SHOW_PROGRESS_DEFAULT = False
     TIMEZONE_DEFAULT = "America/Sao_Paulo"
     DATASET_SAVE_DEFAULT_PATH = "./sotaque-brasileiro-data"
+    DEFAULT_SPEECH_FLAG = True
 
     # Environment
     ENV_FILE_DEFAULT_PATH = Path.home() / ".sotaque_brasileiro.env"

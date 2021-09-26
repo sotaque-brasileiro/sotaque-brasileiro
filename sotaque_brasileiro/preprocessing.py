@@ -69,8 +69,13 @@ def is_speech(frame: np.ndarray, sample_rate: int, aggressiveness: int = 1) -> b
     :param aggressiveness: aggressiveness level (from 0 to 3)
     :return: True if the frame is speech, False otherwise
     """
-    vad = webrtcvad.Vad(aggressiveness)
-    return vad.is_speech(frame, sample_rate)
+    try:
+        vad = webrtcvad.Vad(aggressiveness)
+        ans = vad.is_speech(frame, sample_rate)
+    except:
+        print("Error while processing frame, skipping...")
+        return constants.DEFAULT_SPEECH_FLAG.value
+    return ans
 
 
 def speech_to_text(audio_file: str):
