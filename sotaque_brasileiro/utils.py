@@ -3,17 +3,21 @@ General purpose utilities functions.
 """
 from os import environ
 from pathlib import Path
-from typing import Dict, List
+from typing import Callable, Dict, List, Tuple, Union
 
+import numpy as np
 import pandas as pd
 
 try:
     from tqdm import tqdm
 except ImportError:
     tqdm = None
+from p_tqdm import p_map
 
 from sotaque_brasileiro.constants import constants
-from sotaque_brasileiro.io import safe_getenv
+from sotaque_brasileiro.io import safe_getenv, load_multiple_wav
+from sotaque_brasileiro import preprocessing
+from sotaque_brasileiro.preprocessing import resample, stereo_to_mono
 
 __all__ = [
     "get_updated_dataframe",
@@ -89,7 +93,7 @@ def parse_records_to_dataframe(
     df["date"] = df["date"].dt.tz_convert(timezone)
 
     # Order columns
-    #pylint: disable=invalid-name
+    # pylint: disable=invalid-name
     df = df[
         [
             "id",
@@ -168,3 +172,60 @@ def download_dataset(
         print("Converting audio files...")
         for file in file_list:
             webm_to_wav(file)
+
+
+def load_all_audios(
+    df: pd.DataFrame,
+    *,
+    target_sample_rate: int = None,
+    mono: bool = constants.STEREO_TO_MONO_DEFAULT.value
+) -> Tuple[List[int], List[np.ndarray]]:
+    """
+    Load all audios from the dataframe.
+    """
+    file_list = list(df["audio_file_path"])
+
+    # audios is a list of (rate: int, data: np.ndarray)
+    audios = load_multiple_wav(file_list)
+    rate = [i[0] for i in audios]
+    data = [i[1] for i in audios]
+
+    # Convert to mono if needed
+    if mono:
+        data = p_map(stereo_to_mono, data, desc="Converting to mono...")
+
+    # Resample if needed
+    if target_sample_rate is not None:
+        data = p_map(resample, data, rate, [
+                     target_sample_rate for _ in data], desc="Resampling...")
+        rate = [target_sample_rate for _ in data]
+
+    return rate, data
+
+
+def apply_preprocessing(
+    data: List[np.ndarray],
+    sample_rate: Union[int, List[int]],
+    funcs: List[str],
+    *,
+    kwargs: dict = {},
+) -> np.ndarray:
+    """
+    Apply preprocessing to the data.
+    `funcs` is a list of functions to apply.
+    The function `resample` is always applied first.
+    """
+    if isinstance(sample_rate, int):
+        sample_rate = [sample_rate] * len(data)
+    try:
+        assert len(data) == len(sample_rate)
+    except AssertionError:
+        raise ValueError(
+            "The number of sample rates must be the same as the number of data"
+        )
+    for func in funcs:
+        if hasattr(preprocessing, func):
+            preproc: Callable = getattr(preprocessing, func, **kwargs)
+            data = p_map(preproc, data, sample_rate,
+                         desc=f"Applying {func}...")
+    return data

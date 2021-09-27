@@ -22,6 +22,7 @@ class constants(Enum):  # pylint: disable=invalid-name
     TIMEZONE_DEFAULT = "America/Sao_Paulo"
     DATASET_SAVE_DEFAULT_PATH = "./sotaque-brasileiro-data"
     DEFAULT_SPEECH_FLAG = True
+    STEREO_TO_MONO_DEFAULT = False
 
     # Environment
     ENV_FILE_DEFAULT_PATH = Path.home() / ".sotaque_brasileiro.env"

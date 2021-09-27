@@ -14,6 +14,7 @@ try:
     from tqdm import tqdm
 except ImportError:
     tqdm = None
+from p_tqdm import p_map
 from pydub import AudioSegment
 from google.oauth2 import service_account
 from google.cloud import storage
@@ -66,6 +67,13 @@ def load_wav_file(file_path: str):
     """
     rate, data = wavfile.read(file_path)
     return rate, data
+
+
+def load_multiple_wav(file_paths: Iterable[str]):
+    """
+    Load multiple WAV files.
+    """
+    return p_map(load_wav_file, file_paths, desc="Loading WAV files...")
 
 
 def fetch_paginated_data(url):

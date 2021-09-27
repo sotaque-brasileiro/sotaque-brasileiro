@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="sotaque_brasileiro",
-    version="0.1.8",
+    version="0.1.9",
     license="GPL-3.0",
     description="Sotaque Brasileiro é uma base de dados para estudo de regionalismos brasileiros através da voz.",
     long_description=long_description,
@@ -26,6 +26,7 @@ setup(
         "webrtcvad==2.0.10",
         "librosa==0.8.1",
         "python_speech_features==0.6",
+        "p-tqdm==1.3.3",
     ],
     classifiers=[
         "Development Status :: 4 - Beta",
