@@ -239,7 +239,7 @@ def convert_to_16bit(
 
 def apply_preemphasis(
     audio_array_or_frame: Union[np.ndarray, List[np.ndarray]],
-    *,
+    *args,
     coef: float = constants.PREEMPHASIS_COEFFICIENT.value
 ) -> np.ndarray:
     """
@@ -248,13 +248,17 @@ def apply_preemphasis(
     :param coef: preemphasis coefficient
     :return: the filtered array
     """
+    def preemp(arr):
+        if arr.size == 0:
+            return arr
+        return preemphasis(arr, coef=coef)
     if isinstance(audio_array_or_frame, list) and len(audio_array_or_frame) > 0 and isinstance(audio_array_or_frame[0], np.ndarray):
         return t_map(
-            partial(preemphasis, coef=coef),
+            preemp,
             audio_array_or_frame,
             desc="Applying preemphasis..."
         )
-    return preemphasis(audio_array_or_frame, coef=coef)
+    return preemp(audio_array_or_frame)
 
 #
 # Functions for audio frames only
