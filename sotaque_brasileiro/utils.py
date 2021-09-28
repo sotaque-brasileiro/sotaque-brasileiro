@@ -16,7 +16,7 @@ from p_tqdm import p_map
 
 from sotaque_brasileiro.constants import constants
 from sotaque_brasileiro.io import safe_getenv, load_multiple_wav
-from sotaque_brasileiro import preprocessing
+from sotaque_brasileiro import preprocessing, feature
 from sotaque_brasileiro.preprocessing import resample, stereo_to_mono
 
 __all__ = [
@@ -228,4 +228,35 @@ def apply_preprocessing(
             preproc: Callable = getattr(preprocessing, func, **kwargs)
             data = p_map(preproc, data, sample_rate,
                          desc=f"Applying {func}...")
+        else:
+            raise ValueError(f"{func} is not a valid preprocessing function")
     return data
+
+
+def extract_features(
+    frames: List[np.ndarray],
+    sample_rate: Union[int, List[int]],
+    funcs: List[str],
+    *,
+    kwargs: dict = {},
+) -> Dict[str, np.ndarray]:
+    """
+    Extract features from the data.
+    `funcs` is a list of functions to apply.
+    """
+    if isinstance(sample_rate, int):
+        sample_rate = [sample_rate] * len(frames)
+    try:
+        assert len(frames) == len(sample_rate)
+    except AssertionError:
+        raise ValueError(
+            "The number of sample rates must be the same as the number of data"
+        )
+    features = {}
+    for func in funcs:
+        if hasattr(feature, func):
+            feat: Callable = getattr(feature, func, **kwargs)
+            features[func] = np.array(feat(frames, sample_rate, **kwargs))
+        else:
+            raise ValueError(f"{func} is not a valid feature function")
+    return features
